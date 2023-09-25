@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="HourlyCollectionViewCell" customModule="ios_weatherApps" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="193" height="241"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="193" height="241"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8L-ca-LoW">
+                        <rect key="frame" x="0.0" y="59" width="193" height="182"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Yvk-r7-RXf">
+                                <rect key="frame" x="0.0" y="0.0" width="193" height="182"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBA-xk-xLp">
+                                        <rect key="frame" x="0.0" y="0.0" width="193" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Idz-CN-jS3">
+                                        <rect key="frame" x="0.0" y="68.666666666666657" width="193" height="45"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Tb-w9-vSM">
+                                        <rect key="frame" x="0.0" y="132" width="193" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Yvk-r7-RXf" secondAttribute="bottom" id="8RO-dR-4Jw"/>
+                            <constraint firstItem="Yvk-r7-RXf" firstAttribute="leading" secondItem="s8L-ca-LoW" secondAttribute="leading" id="UmO-jN-T8E"/>
+                            <constraint firstAttribute="trailing" secondItem="Yvk-r7-RXf" secondAttribute="trailing" id="VkX-XG-DuT"/>
+                            <constraint firstItem="Yvk-r7-RXf" firstAttribute="top" secondItem="s8L-ca-LoW" secondAttribute="top" id="Wfp-kf-r9G"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="leading" secondItem="s8L-ca-LoW" secondAttribute="leading" id="GES-zs-Mrn"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="top" secondItem="s8L-ca-LoW" secondAttribute="top" id="N8X-4N-0oD"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="bottom" secondItem="s8L-ca-LoW" secondAttribute="bottom" id="gSI-Oj-wXs"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="trailing" secondItem="s8L-ca-LoW" secondAttribute="trailing" id="nM9-xh-43v"/>
+            </constraints>
+            <size key="customSize" width="193" height="241"/>
+            <connections>
+                <outlet property="hourLabel" destination="dBA-xk-xLp" id="dGX-1I-r4t"/>
+                <outlet property="iconImageView" destination="Idz-CN-jS3" id="gAg-As-efw"/>
+                <outlet property="tempLabel" destination="3Tb-w9-vSM" id="Ryd-5Q-DlJ"/>
+            </connections>
+            <point key="canvasLocation" x="53" y="102"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="cloud" catalog="system" width="128" height="87"/>
+    </resources>
+</document>

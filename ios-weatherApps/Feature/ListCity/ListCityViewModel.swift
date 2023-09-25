@@ -1,0 +1,267 @@
+import Foundation
+
+protocol ListCityDelegate {
+    func didSelectCity()
+}
+
+protocol ListCityViewModelInput {
+    func getListCity()
+    func saveSelectedCity(with lat: Double, lon: Double, _ completion: @escaping(Bool) -> Void)
+}
+
+protocol ListCityViewModelOutput {
+    var listCity: Observable<[ListCity]> { get }
+    var delegate: ListCityDelegate? { get }
+}
+
+protocol ListCityViewModel: ListCityViewModelInput, ListCityViewModelOutput {}
+
+final class DefaultListCityViewModel: ListCityViewModel {
+    var delegate: ListCityDelegate?
+    let listCity: Observable<[ListCity]> = Observable([])
+    let useCase: ListCityUseCaseProtocol
+    
+    init(useCase: ListCityUseCaseProtocol) {
+        self.useCase = useCase
+    }
+    
+    func saveSelectedCity(with lat: Double, lon: Double, _ completion: @escaping(Bool) -> Void) {
+        self.useCase.getWeatherEachCity(with: lat, lon: lon) { [weak self] data in
+            switch data {
+            case .success(let data):
+                self?.useCase.saveWeatherResult(data, completion: { bool in
+                    switch bool {
+                    case .success(let success):
+                        completion(success)
+                    case .failure(_):
+                        break
+                    }
+                })
+            case .failure(_):
+                break
+            }
+        }
+    }
+    
+    internal func getListCity() {
+        let result: [ListCity] = [
+            ListCity(city: "Abidjan", country: "Ivory Coast", lat: "5.35444", long: "-4.00167"),
+            ListCity(city: "Abu Dhabi", country: "United Arab Emirates", lat: "24.45118", long: "54.39696"),
+            ListCity(city: "Aleppo", country: "Syria", lat: "36.20124", long: "37.16117"),
+            ListCity(city: "Alexandria", country: "Egypt", lat: "31.20176", long: "29.91582"),
+            ListCity(city: "Algiers", country: "Algeria", lat: "36.73225", long: "3.08746"),
+            ListCity(city: "Almaty", country: "Kazakhstan", lat: "43.25667", long: "76.92861"),
+            ListCity(city: "Amman", country: "Jordan", lat: "31.95522", long: "35.94503"),
+            ListCity(city: "Amsterdam", country: "Netherlands", lat: "52.37403", long: "4.88969"),
+            ListCity(city: "Anchorage", country: "United States", lat: "61.21806", long: "-149.90028"),
+            ListCity(city: "Andorra la Vella", country: "Andorra", lat: "42.50779", long: "1.52109"),
+            ListCity(city: "Ankara", country: "Turkey", lat: "39.91987", long: "32.85427"),
+            ListCity(city: "Antananarivo", country: "Madagascar", lat: "-18.91368", long: "47.53613"),
+            ListCity(city: "Apia", country: "Samoa", lat: "-13.83333", long: "-171.76666"),
+            ListCity(city: "Arnold", country: "United States", lat: "38.255366", long: "-120.35194"),
+            ListCity(city: "Ashgabat", country: "Turkmenistan", lat: "37.95", long: "58.38333"),
+            ListCity(city: "Asmara", country: "Eritrea", lat: "15.33805", long: "38.93184"),
+            ListCity(city: "Asuncion", country: "Paraguay", lat: "-25.28646", long: "-57.647"),
+            ListCity(city: "Athens", country: "Greece", lat: "37.98376", long: "23.72784"),
+            ListCity(city: "Auckland", country: "New Zealand", lat: "-36.84853", long: "174.76349"),
+            ListCity(city: "Avarua", country: "Cook Islands", lat: "-21.2075", long: "-159.77545"),
+            ListCity(city: "Baghdad", country: "Iraq", lat: "33.34058", long: "44.40088"),
+            ListCity(city: "Baku", country: "Azerbaijan", lat: "40.37767", long: "49.89201"),
+            ListCity(city: "Bamako", country: "Mali", lat: "12.65", long: "-8"),
+            ListCity(city: "Banda Aceh", country: "Indonesia", lat: "5.54167", long: "95.33333"),
+            ListCity(city: "Bandar Seri Begawan", country: "Brunei", lat: "4.89035", long: "114.94006"),
+            ListCity(city: "Bandung", country: "Indonesia", lat: "-6.92222", long: "107.60694"),
+            ListCity(city: "Bangkok", country: "Thailand", lat: "13.75398", long: "100.50144"),
+            ListCity(city: "Bangui", country: "Central African Republic", lat: "4.36122", long: "18.55496"),
+            ListCity(city: "Banjul", country: "Gambia", lat: "13.45274", long: "-16.57803"),
+            ListCity(city: "Barcelona", country: "Spain", lat: "41.38879", long: "2.15899"),
+            ListCity(city: "Barranquilla", country: "Colombia", lat: "10.96854", long: "-74.78132"),
+            ListCity(city: "Basrah", country: "Iraq", lat: "30.50852", long: "47.7804"),
+            ListCity(city: "Basse-Terre", country: "Guadeloupe", lat: "15.99714", long: "-61.73214"),
+            ListCity(city: "Basseterre", country: "Saint Kitts and Nevis", lat: "17.2955", long: "-62.72499"),
+            ListCity(city: "Beijing", country: "China", lat: "39.90421", long: "116.4074"),
+            ListCity(city: "Beirut", country: "Lebanon", lat: "33.88894", long: "35.49442"),
+            ListCity(city: "Belgrade", country: "Serbia", lat: "44.80401", long: "20.46513"),
+            ListCity(city: "Belmopan", country: "Belize", lat: "17.25", long: "-88.76667"),
+            ListCity(city: "Berlin", country: "Germany", lat: "52.52001", long: "13.40495"),
+            ListCity(city: "Bern", country: "Switzerland", lat: "46.94809", long: "7.44744"),
+            ListCity(city: "Bishkek", country: "Kyrgyzstan", lat: "42.87472", long: "74.61222"),
+            ListCity(city: "Bissau", country: "Guinea-Bissau", lat: "11.86357", long: "-15.59767"),
+            ListCity(city: "Bogota", country: "Colombia", lat: "4.60971", long: "-74.08175"),
+            ListCity(city: "Brasilia", country: "Brazil", lat: "-15.78014", long: "-47.92917"),
+            ListCity(city: "Bratislava", country: "Slovakia", lat: "48.14816", long: "17.10674"),
+            ListCity(city: "Brazzaville", country: "Congo", lat: "-4.26791", long: "15.29185"),
+            ListCity(city: "Bridgetown", country: "Barbados", lat: "13.09728", long: "-59.61747"),
+            ListCity(city: "Brussels", country: "Belgium", lat: "50.85045", long: "4.34878"),
+            ListCity(city: "Bucharest", country: "Romania", lat: "44.42676", long: "26.10254"),
+            ListCity(city: "Budapest", country: "Hungary", lat: "47.49801", long: "19.03991"),
+            ListCity(city: "Buenos Aires", country: "Argentina", lat: "-34.61178", long: "-58.41731"),
+            ListCity(city: "Bujumbura", country: "Burundi", lat: "-3.3822", long: "29.3644"),
+            ListCity(city: "Cairo", country: "Egypt", lat: "30.06263", long: "31.24967"),
+            ListCity(city: "Canberra", country: "Australia", lat: "-35.28346", long: "149.12807"),
+            ListCity(city: "Cape Town", country: "South Africa", lat: "-33.92584", long: "18.42322"),
+            ListCity(city: "Caracas", country: "Venezuela", lat: "10.48801", long: "-66.87919"),
+            ListCity(city: "Castries", country: "Saint Lucia", lat: "14.01011", long: "-60.98767"),
+            ListCity(city: "Cayenne", country: "French Guiana", lat: "4.9372", long: "-52.32897"),
+            ListCity(city: "Charlotte Amalie", country: "U.S. Virgin Islands", lat: "18.3419", long: "-64.9307"),
+            ListCity(city: "Chisinau", country: "Moldova", lat: "47.00556", long: "28.8575"),
+            ListCity(city: "Conakry", country: "Guinea", lat: "9.53795", long: "-13.67729"),
+            ListCity(city: "Copenhagen", country: "Denmark", lat: "55.67594", long: "12.56553"),
+            ListCity(city: "Dakar", country: "Senegal", lat: "14.6937", long: "-17.44406"),
+            ListCity(city: "Damascus", country: "Syria", lat: "33.5102", long: "36.29128"),
+            ListCity(city: "Dhaka", country: "Bangladesh", lat: "23.8103", long: "90.4125"),
+            ListCity(city: "Dili", country: "Timor-Leste", lat: "-8.55861", long: "125.57361"),
+            ListCity(city: "Djibouti", country: "Djibouti", lat: "11.58901", long: "43.14503"),
+            ListCity(city: "Dodoma", country: "Tanzania", lat: "-6.17221", long: "35.73947"),
+            ListCity(city: "Doha", country: "Qatar", lat: "25.27699", long: "51.52001"),
+            ListCity(city: "Dublin", country: "Ireland", lat: "53.33306", long: "-6.24889"),
+            ListCity(city: "Dushanbe", country: "Tajikistan", lat: "38.53575", long: "68.77388"),
+            ListCity(city: "Edinburgh", country: "United Kingdom", lat: "55.95206", long: "-3.19648"),
+            ListCity(city: "Freetown", country: "Sierra Leone", lat: "8.484", long: "-13.22801"),
+            ListCity(city: "Gaborone", country: "Botswana", lat: "-24.65451", long: "25.90859"),
+            ListCity(city: "George Town", country: "Cayman Islands", lat: "19.28694", long: "-81.36744"),
+            ListCity(city: "Georgetown", country: "Guyana", lat: "6.80461", long: "-58.15527"),
+            ListCity(city: "Guatemala City", country: "Guatemala", lat: "14.634915", long: "-90.506882"),
+            ListCity(city: "Hagåtña", country: "Guam", lat: "13.47481", long: "144.75058"),
+            ListCity(city: "Hamilton", country: "Bermuda", lat: "32.29481", long: "-64.78659"),
+            ListCity(city: "Hanoi", country: "Vietnam", lat: "21.02847", long: "105.85417"),
+            ListCity(city: "Harare", country: "Zimbabwe", lat: "-17.82935", long: "31.05222"),
+            ListCity(city: "Havana", country: "Cuba", lat: "23.13302", long: "-82.38304"),
+            ListCity(city: "Helsinki", country: "Finland", lat: "60.16952", long: "24.93545"),
+            ListCity(city: "Hobart", country: "Australia", lat: "-42.87936", long: "147.32941"),
+            ListCity(city: "Hong Kong", country: "Hong Kong", lat: "22.27832", long: "114.17469"),
+            ListCity(city: "Honolulu", country: "United States", lat: "21.30694", long: "-157.85833"),
+            ListCity(city: "Islamabad", country: "Pakistan", lat: "33.68442", long: "73.04789"),
+            ListCity(city: "Istanbul", country: "Turkey", lat: "41.01384", long: "28.94966"),
+            ListCity(city: "Jakarta", country: "Indonesia", lat: "-6.21462", long: "106.84513"),
+            ListCity(city: "Jamestown", country: "Saint Helena", lat: "-15.93872", long: "-5.71675"),
+            ListCity(city: "Jerusalem", country: "Israel", lat: "31.76904", long: "35.21633"),
+            ListCity(city: "Juba", country: "South Sudan", lat: "4.85165", long: "31.58247"),
+            ListCity(city: "Kabul", country: "Afghanistan", lat: "34.52813", long: "69.17233"),
+            ListCity(city: "Kampala", country: "Uganda", lat: "0.31361", long: "32.58111"),
+            ListCity(city: "Kathmandu", country: "Nepal", lat: "27.70169", long: "85.3206"),
+            ListCity(city: "Khartoum", country: "Sudan", lat: "15.55177", long: "32.53241"),
+            ListCity(city: "Kiev", country: "Ukraine", lat: "50.45466", long: "30.5238"),
+            ListCity(city: "Kigali", country: "Rwanda", lat: "-1.94995", long: "30.05885"),
+            ListCity(city: "Kingston", country: "Jamaica", lat: "17.99702", long: "-76.79358"),
+            ListCity(city: "Kingstown", country: "Saint Vincent and the Grenadines", lat: "13.15527", long: "-61.22475"),
+            ListCity(city: "Kinshasa", country: "Congo", lat: "-4.32758", long: "15.31357"),
+            ListCity(city: "Kuala Lumpur", country: "Malaysia", lat: "3.1412", long: "101.68653"),
+            ListCity(city: "Kuwait City", country: "Kuwait", lat: "29.37585", long: "47.97741"),
+            ListCity(city: "Kyiv", country: "Ukraine", lat: "50.45466", long: "30.5238"),
+            ListCity(city: "La Paz", country: "Bolivia", lat: "-16.5000", long: "-68.1500"),
+            ListCity(city: "Libreville", country: "Gabon", lat: "0.39241", long: "9.45356"),
+            ListCity(city: "Lilongwe", country: "Malawi", lat: "-13.98333", long: "33.78333"),
+            ListCity(city: "Lima", country: "Peru", lat: "-12.04637", long: "-77.04279"),
+            ListCity(city: "Lisbon", country: "Portugal", lat: "38.71667", long: "-9.13333"),
+            ListCity(city: "Ljubljana", country: "Slovenia", lat: "46.05108", long: "14.50513"),
+            ListCity(city: "Lome", country: "Togo", lat: "6.13748", long: "1.21227"),
+            ListCity(city: "London", country: "United Kingdom", lat: "51.50853", long: "-0.12574"),
+            ListCity(city: "Luanda", country: "Angola", lat: "-8.83682", long: "13.23432"),
+            ListCity(city: "Lusaka", country: "Zambia", lat: "-15.40809", long: "28.28636"),
+            ListCity(city: "Luxembourg", country: "Luxembourg", lat: "49.61167", long: "6.13"),
+            ListCity(city: "Madrid", country: "Spain", lat: "40.4165", long: "-3.70256"),
+            ListCity(city: "Majuro", country: "Marshall Islands", lat: "7.08971", long: "171.38027"),
+            ListCity(city: "Malabo", country: "Equatorial Guinea", lat: "3.75", long: "8.78333"),
+            ListCity(city: "Malé", country: "Maldives", lat: "4.1748", long: "73.50935"),
+            ListCity(city: "Managua", country: "Nicaragua", lat: "12.13282", long: "-86.2504"),
+            ListCity(city: "Manama", country: "Bahrain", lat: "26.21536", long: "50.5832"),
+            ListCity(city: "Manila", country: "Philippines", lat: "13.41363", long: "122.48283"),
+            ListCity(city: "Maputo", country: "Mozambique", lat: "-25.96553", long: "32.58322"),
+            ListCity(city: "Maseru", country: "Lesotho", lat: "-29.31667", long: "27.48333"),
+            ListCity(city: "Mbabane", country: "Eswatini", lat: "-26.31667", long: "31.13333"),
+            ListCity(city: "Melbourne", country: "Australia", lat: "-37.814", long: "144.96332"),
+            ListCity(city: "Mexico City", country: "Mexico", lat: "19.42847", long: "-99.12766"),
+            ListCity(city: "Minsk", country: "Belarus", lat: "53.90454", long: "27.56152"),
+            ListCity(city: "Mogadishu", country: "Somalia", lat: "2.03711", long: "45.34375"),
+            ListCity(city: "Monaco", country: "Monaco", lat: "43.73333", long: "7.41667"),
+            ListCity(city: "Monrovia", country: "Liberia", lat: "6.30054", long: "-10.7969"),
+            ListCity(city: "Montevideo", country: "Uruguay", lat: "-34.90328", long: "-56.18816"),
+            ListCity(city: "Moroni", country: "Comoros", lat: "-11.70216", long: "43.25506"),
+            ListCity(city: "Moscow", country: "Russia", lat: "55.75583", long: "37.6176"),
+            ListCity(city: "Muscat", country: "Oman", lat: "23.58413", long: "58.40778"),
+            ListCity(city: "Nairobi", country: "Kenya", lat: "-1.286389", long: "36.817223"),
+            ListCity(city: "Nassau", country: "Bahamas", lat: "25.03428", long: "-77.39628"),
+            ListCity(city: "Naypyidaw", country: "Myanmar", lat: "19.745", long: "96.12972"),
+            ListCity(city: "New Delhi", country: "India", lat: "28.61394", long: "77.20902"),
+            ListCity(city: "Niamey", country: "Niger", lat: "13.51278", long: "2.11278"),
+            ListCity(city: "Nicosia", country: "Cyprus", lat: "35.17531", long: "33.3642"),
+            ListCity(city: "Nouakchott", country: "Mauritania", lat: "18.08581", long: "-15.9785"),
+            ListCity(city: "Noumea", country: "New Caledonia", lat: "-22.27631", long: "166.4572"),
+            ListCity(city: "Nuku'alofa", country: "Tonga", lat: "-21.13938", long: "-175.20495"),
+            ListCity(city: "Oranjestad", country: "Aruba", lat: "12.52454", long: "-70.02705"),
+            ListCity(city: "Oslo", country: "Norway", lat: "59.91273", long: "10.74609"),
+            ListCity(city: "Ottawa", country: "Canada", lat: "45.41117", long: "-75.69812"),
+            ListCity(city: "Ouagadougou", country: "Burkina Faso", lat: "12.36566", long: "-1.53388"),
+            ListCity(city: "Pago Pago", country: "American Samoa", lat: "-14.27806", long: "-170.7025"),
+            ListCity(city: "Palikir", country: "Micronesia", lat: "6.92477", long: "158.16109"),
+            ListCity(city: "Panama City", country: "Panama", lat: "8.9936", long: "-79.51973"),
+            ListCity(city: "Paramaribo", country: "Suriname", lat: "5.86638", long: "-55.16682"),
+            ListCity(city: "Paris", country: "France", lat: "48.85341", long: "2.3488"),
+            ListCity(city: "Peking", country: "China", lat: "39.9075", long: "116.39723"),
+            ListCity(city: "Phnom Penh", country: "Cambodia", lat: "11.56245", long: "104.91601"),
+            ListCity(city: "Port Louis", country: "Mauritius", lat: "-20.16194", long: "57.49889"),
+            ListCity(city: "Port Moresby", country: "Papua New Guinea", lat: "-9.44314", long: "147.17972"),
+            ListCity(city: "Port of Spain", country: "Trinidad and Tobago", lat: "10.66667", long: "-61.51667"),
+            ListCity(city: "Port Vila", country: "Vanuatu", lat: "-17.73319", long: "168.32722"),
+            ListCity(city: "Port-au-Prince", country: "Haiti", lat: "18.53917", long: "-72.335"),
+            ListCity(city: "Porto-Novo", country: "Benin", lat: "6.49646", long: "2.60359"),
+            ListCity(city: "Prague", country: "Czech Republic", lat: "50.08804", long: "14.42076"),
+            ListCity(city: "Praia", country: "Cape Verde", lat: "14.93152", long: "-23.51254"),
+            ListCity(city: "Pretoria", country: "South Africa", lat: "-25.74611", long: "28.18806"),
+            ListCity(city: "Pristina", country: "Kosovo", lat: "42.67272", long: "21.16688"),
+            ListCity(city: "Pyongyang", country: "North Korea", lat: "39.03385", long: "125.75432"),
+            ListCity(city: "Quito", country: "Ecuador", lat: "-0.22985", long: "-78.52495"),
+            ListCity(city: "Rabat", country: "Morocco", lat: "34.02088", long: "-6.84165"),
+            ListCity(city: "Reykjavik", country: "Iceland", lat: "64.13548", long: "-21.89541"),
+            ListCity(city: "Riga", country: "Latvia", lat: "56.946", long: "24.10689"),
+            ListCity(city: "Riyadh", country: "Saudi Arabia", lat: "24.68773", long: "46.72185"),
+            ListCity(city: "Rome", country: "Italy", lat: "41.89193", long: "12.51133"),
+            ListCity(city: "Roseau", country: "Dominica", lat: "15.30174", long: "-61.38703"),
+            ListCity(city: "San Jose", country: "Costa Rica", lat: "9.93333", long: "-84.08333"),
+            ListCity(city: "San Juan", country: "Puerto Rico", lat: "18.46633", long: "-66.10572"),
+            ListCity(city: "San Marino", country: "San Marino", lat: "43.93681", long: "12.44654"),
+            ListCity(city: "San Salvador", country: "El Salvador", lat: "13.69889", long: "-89.19139"),
+            ListCity(city: "Sanaa", country: "Yemen", lat: "15.35202", long: "44.20749"),
+            ListCity(city: "Santa Cruz de Tenerife", country: "Spain", lat: "28.46824", long: "-16.25462"),
+            ListCity(city: "Santiago", country: "Chile", lat: "-33.44889", long: "-70.66927"),
+            ListCity(city: "Santo Domingo", country: "Dominican Republic", lat: "18.50012", long: "-69.98857"),
+            ListCity(city: "Sao Tome", country: "Sao Tome and Principe", lat: "0.33654", long: "6.72732"),
+            ListCity(city: "Sarajevo", country: "Bosnia and Herzegovina", lat: "43.84864", long: "18.35644"),
+            ListCity(city: "Seoul", country: "South Korea", lat: "37.566", long: "126.9784"),
+            ListCity(city: "Singapore", country: "Singapore", lat: "1.28967", long: "103.85007"),
+            ListCity(city: "Skopje", country: "North Macedonia", lat: "42.00694", long: "21.43111"),
+            ListCity(city: "Sofia", country: "Bulgaria", lat: "42.69751", long: "23.32415"),
+            ListCity(city: "St. George's", country: "Grenada", lat: "12.05623", long: "-61.748"),
+            ListCity(city: "Stockholm", country: "Sweden", lat: "59.33258", long: "18.0649"),
+            ListCity(city: "Suva", country: "Fiji", lat: "-18.14161", long: "178.44149"),
+            ListCity(city: "Taipei", country: "Taiwan", lat: "25.04776", long: "121.53185"),
+            ListCity(city: "Tallinn", country: "Estonia", lat: "59.43722", long: "24.745"),
+            ListCity(city: "Tashkent", country: "Uzbekistan", lat: "41.26465", long: "69.21627"),
+            ListCity(city: "Tbilisi", country: "Georgia", lat: "41.69411", long: "44.83368"),
+            ListCity(city: "Tegucigalpa", country: "Honduras", lat: "14.0818", long: "-87.20681"),
+            ListCity(city: "Tehran", country: "Iran", lat: "35.6895", long: "51.39909"),
+            ListCity(city: "Thimphu", country: "Bhutan", lat: "27.46609", long: "89.64191"),
+            ListCity(city: "Tirana", country: "Albania", lat: "41.3275", long: "19.81889"),
+            ListCity(city: "Tokyo", country: "Japan", lat: "35.682839", long: "139.759455"),
+            ListCity(city: "Tripoli", country: "Libya", lat: "32.87519", long: "13.18746"),
+            ListCity(city: "Tunis", country: "Tunisia", lat: "36.81897", long: "10.16579"),
+            ListCity(city: "Ulaanbaatar", country: "Mongolia", lat: "47.90771", long: "106.88324"),
+            ListCity(city: "Vaduz", country: "Liechtenstein", lat: "47.14151", long: "9.52154"),
+            ListCity(city: "Valletta", country: "Malta", lat: "35.89972", long: "14.51472"),
+            ListCity(city: "Vatican City", country: "Vatican City", lat: "41.90236", long: "12.45332"),
+            ListCity(city: "Vienna", country: "Austria", lat: "48.20849", long: "16.37208"),
+            ListCity(city: "Vientiane", country: "Laos", lat: "17.96667", long: "102.6"),
+            ListCity(city: "Vilnius", country: "Lithuania", lat: "54.68916", long: "25.2798"),
+            ListCity(city: "Warsaw", country: "Poland", lat: "52.22977", long: "21.01178"),
+            ListCity(city: "Washington, D.C.", country: "United States", lat: "38.89511", long: "-77.03637"),
+            ListCity(city: "Wellington", country: "New Zealand", lat: "-41.28664", long: "174.77557"),
+            ListCity(city: "Windhoek", country: "Namibia", lat: "-22.55972", long: "17.08361"),
+            ListCity(city: "Yamoussoukro", country: "Ivory Coast", lat: "6.82056", long: "-5.27667"),
+            ListCity(city: "Yaounde", country: "Cameroon", lat: "3.84803", long: "11.50207"),
+            ListCity(city: "Yerevan", country: "Armenia", lat: "40.18111", long: "44.51361"),
+            ListCity(city: "Zagreb", country: "Croatia", lat: "45.81444", long: "15.97798")
+        ]
+        self.listCity.value = result
+    }
+}

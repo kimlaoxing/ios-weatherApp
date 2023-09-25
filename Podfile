@@ -5,7 +5,6 @@ target 'ios-weatherApps' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-	pod 'Alamofire', '~> 5.8.0'
 	pod 'Declayout', '~> 1.3.0'
 	pod 'RealmSwift', '~> 10.42.3'
 	pod 'lottie-ios', '~> 3.2.3'
